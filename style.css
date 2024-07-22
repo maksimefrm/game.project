@@ -17,17 +17,67 @@ body{
     background-color: var(--purple);
     padding: 20px;
 }
+.launch {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.launchForm {
+    background-color: var(--lighter-purple);
+    border: 5px solid var(--white);
+    border-radius: 20px;
+    padding: 20px 20px;
+}
+.launchForm h2 {
+    text-align: center;
+}
+.launchForm input {
+    margin-top: 15px;
+    background-color: var(--lighter-purple);
+    color: var(--white);
+    outline: 0;
+    border: 1px var(--light-purple) solid;
+    width: 100%;
+    font-size: 24px;
+    border-radius: 5px;
+    padding: 5px 15px;
+}
+h1 {
+    font-size: 45px;
+}
 .bomb{
     width: 80px;
 }
 header{
     display: flex;
-    gap: 20px;
+    gap: 50px;
     align-items: center;
     background-color: var(--light-purple);
     padding: 20px;
     border-radius: 20px;
     margin-bottom: 20px;
+}
+header span {
+    font-size: 20px;
+}
+.exit {
+    background-color: var(--light-purple);
+    text-decoration: underline;
+    cursor: pointer;
+}
+.exit:hover {
+    color: var(--white)
+}
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 main {
     display: flex;
@@ -40,6 +90,7 @@ main {
     flex-grow: 1000;
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 20px 0;
 }
 .gameField {
@@ -109,4 +160,7 @@ main {
 .disabled-button {
     pointer-events: none;
     opacity: 0.5;
+}
+.launch.disabled {
+    display: none;
 }
