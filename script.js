@@ -1,5 +1,7 @@
 let USERNAME
 let launch = document.querySelector('.launch')
+let points = 1000
+let game_id
 checkLS()
 
 document.getElementById('login').addEventListener('submit', function(event) {
@@ -35,14 +37,14 @@ async function auth() {
         let registration = await sendRequest("user", "POST", {
             username: login
     })
-    if (registration.error) {
-        alert(registration.message)
-    } else {
+        if (registration.error) {
+            alert(registration.message)
+        } else {
         //пользователь успешно зарег
-        USERNAME = login
-        launch.classList.add('disabled')
-        updateUserBalance()
-        localStorage.setItem('username', USERNAME)
+            USERNAME = login
+            launch.classList.add('disabled')
+            updateUserBalance()
+            localStorage.setItem('username', USERNAME)
     }
     } else {
         //пользователь успешно зарег
@@ -95,5 +97,115 @@ async function sendRequest(url, method, data) {
         })
         response = await response.json()
         return response
+    }
+}
+
+//2 урок
+
+
+// document.querySelectorAll('.point').forEach( (btn) => {
+//     btn.addEventListener('click', setPoints)
+// })
+
+// function setPoints() {
+//     let userBtn = event.target
+//     points = +userBtn.innerHTML
+
+//     let activeBtn = document.querySelector('.point.active')
+//     activeBtn.classList.remove('active')
+
+//     userBtn.classList.add('active')
+// }
+
+document.querySelectorAll('.point').forEach((btn) => {
+    btn.addEventListener('click', setPoints)
+})
+
+function setPoints(event) {
+    let userBtn = event.target
+    points = +userBtn.innerHTML
+
+    let activeBtn = document.querySelector('.point.active')
+    if (activeBtn) {
+        activeBtn.classList.remove('active')
+    }
+
+    userBtn.classList.add('active')
+}
+
+function activateArea() {
+    let cells = document.querySelectorAll(".cell")
+    cells.forEach((cell, i) => {
+        setTimeout(() => {
+            cell.classList.add('active')
+            cell.addEventListener('contextmenu', (event) => {
+                event.preventDefault()
+                setFlag()
+            })
+        }, i * 15)
+    })
+}
+
+function setFlag() {
+    let cell = event.target
+    cell.classList.toggle('flag')
+}
+
+function cleanArea() {
+    let gameField = document.querySelector('.gameField') 
+    gameField.innerHTML = "";
+
+    for (let i = 0; i < 80; i++) {
+        let cell = document.createElement('div')
+        cell.classList.add('cell')
+        gameField.appendChild(cell)
+    }
+} 
+
+let gameBtn = document.getElementById('gameBtn')
+gameBtn.addEventListener('click', startOrStop)
+
+function startOrStop() {
+    let btnText = gameBtn.innerHTML
+    if(btnText == "ИГРАТЬ") {
+        startGame()
+
+
+
+        gameBtn.innerHTML = "ЗАКОНЧИТЬ ИГРУ"
+    } else {
+        stopGame()
+
+        gameBtn.innerHTML = "ИГРАТЬ"
+    }
+}
+async function startGame() {
+    let response = await sendRequest('new_game', 'POST', {
+        'username': USERNAME,
+        points
+    })
+    if(response.error) {
+        alert(response.message)
+        gameBtn.innerHTML = "ИГРАТЬ"
+    } else {
+        updateUserBalance()
+        game_id = response.game_id
+        activateArea()
+
+        console.log(game_id)
+    }
+}
+
+async function stopGame() {
+    let response = await sendRequest('stop_game', 'POST', {
+        'username': USERNAME,
+        game_id
+    })
+    if(response.error) {
+        alert(response.message)
+        gameBtn.innerHTML = "ЗАКОНЧИТЬ ИГРУ"
+    } else {
+        updateUserBalance()
+        cleanArea()
     }
 }
