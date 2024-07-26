@@ -142,6 +142,13 @@ function activateArea() {
                 event.preventDefault()
                 setFlag()
             })
+
+            let row = Math.trunc(i/10)
+            let column = i - row*10
+            cell.setAttribute('data-row', row)
+            cell.setAttribute('data-column', column)
+
+            cell.addEventListener('click', makeStep)
         }, i * 15)
     })
 }
@@ -207,5 +214,80 @@ async function stopGame() {
     } else {
         updateUserBalance()
         cleanArea()
+    }
+}
+
+async function makeStep() {
+    let cell = event.target
+    let row = +cell.getAttribute('data-row')
+    let column = +cell.getAttribute('data-column')
+
+    console.log(row, column)
+
+    let response = await sendRequest('game_step', 'POST', {
+        game_id, row, column
+    })
+
+    if (response.error) {
+        alert(response.message)
+    } else {
+        updateArea(response.table)
+        if(response.status == "Ok") {
+            //играем дальше
+        } else if (response.status == "Failed"){
+            //проиграл
+            alert('Вы проиграли')
+            gameBtn.classList.add('disabled-button')
+            gameBtn.innerHTML = "ИГРАТЬ"
+
+            setTimeout( () => {
+                cleanArea()
+                gameBtn.classList.remove('disabled-button')
+            }, 3000)
+
+        } else if (response.status == "Won") {
+            //выиграл
+            alert('Вы выиграли')
+            updateUserBalance()
+
+            gameBtn.classList.add('disabled-button')
+            gameBtn.innerHTML = "ИГРАТЬ"
+
+            setTimeout( () => {
+                cleanArea()
+                gameBtn.classList.remove('disabled-button')
+            }, 3000)
+
+        }
+    }
+}
+
+function updateArea(table) {
+    //какие могут быть значения у ячейки (переменная value)
+
+    let cells = document.querySelectorAll(".cell")
+
+    let a = 0 //номер ячейки 
+
+    for(let i = 0; i < table.length; i++) {
+        let row = table[i]
+        for(let j = 0; j < row.length; j++) {
+            //проходимся по ячейкам в ряду
+            let value = row[j]
+            let cell = cells[a]
+    
+            if (value === "BOMB") {
+                cell.classList.remove('active')
+                cell.classList.add('bomb')
+            } else if (value === "") {
+    
+            } else if (value === 0) {
+                cell.classList.remove('active')
+            } else if (value > 0) {
+                cell.classList.remove('active')
+                cell.innerHTML = value
+            }
+            a++
+        }
     }
 }
