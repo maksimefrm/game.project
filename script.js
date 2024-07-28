@@ -236,19 +236,32 @@ async function makeStep() {
             //играем дальше
         } else if (response.status == "Failed"){
             //проиграл
-            alert('Вы проиграли')
+
+            let panel = document.querySelector(".panel")
+            let looser = document.querySelector(".looser");
+
+            panel.style.display = "none"
+            looser.style.display = "flex"
+
             gameBtn.classList.add('disabled-button')
             gameBtn.innerHTML = "ИГРАТЬ"
 
             setTimeout( () => {
                 cleanArea()
                 gameBtn.classList.remove('disabled-button')
-            }, 3000)
+                looser.style.display = "none"
+                panel.style.display = "block"
+            }, 5000)
 
         } else if (response.status == "Won") {
             //выиграл
-            alert('Вы выиграли')
             updateUserBalance()
+
+            let win = document.querySelector(".win");
+            let panel = document.querySelector(".panel");
+
+            panel.style.display = "none"
+            win.style.display = "flex"
 
             gameBtn.classList.add('disabled-button')
             gameBtn.innerHTML = "ИГРАТЬ"
@@ -256,7 +269,9 @@ async function makeStep() {
             setTimeout( () => {
                 cleanArea()
                 gameBtn.classList.remove('disabled-button')
-            }, 3000)
+                win.style.display = "none"
+                panel.style.display = "block"
+            }, 5000)
 
         }
     }
@@ -291,3 +306,4 @@ function updateArea(table) {
         }
     }
 }
+
