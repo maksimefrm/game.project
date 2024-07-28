@@ -115,7 +115,7 @@ main {
     background-image: url(./bomb.png);
     background-size: cover;
     background-color: red;
-    background-size: auto;
+    width: 30px;
 }
 .cell.flag {
     background-image: url(./flag.jpg);
