@@ -117,8 +117,9 @@ main {
 .cell.bomb {
     background-image: url(./bomb.png);
     background-size: cover;
-    background-color: rgb(195, 83, 83);
+    background-color: rgb(225, 26, 26);
     width: 30px;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.922);
 }
 .cell.flag {
     background-image: url(./flag.jpg);
